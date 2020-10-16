@@ -1,3 +1,7 @@
+# !/usr/bin/Rscript
+# 2020-10-15
+# Dongdong Kong ----------------------------------------------------------------
+# source('examles/main_pkgs.R')
 
 library(magrittr)
 library(purrr)
@@ -6,6 +10,15 @@ library(plyr)
 library(stringr)
 library(foreach)
 library(iterators)
+
+library(JuliaCall)
+## spatial
+library(raster)
+library(rgdal)
+library(sp)
+library(sf)
+library(stars)
+
 # personal packages
 library(Ipaper)
 library(latticeGrob)

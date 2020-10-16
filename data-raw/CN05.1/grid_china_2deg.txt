@@ -1,0 +1,18 @@
+# grid_china_2deg
+# 
+# Modified from: 
+# cdo griddes CN05.1_Pre_1961_2018_month_025x025.nc 
+gridtype  = lonlat
+xsize     = 35
+ysize     = 20
+xname     = lon
+xlongname = "longitude"
+xunits    = "degrees_east"
+yname     = lat
+ylongname = "latitude"
+yunits    = "degrees_north"
+xfirst    = 71
+xinc      = 2
+yfirst    = 16
+yinc      = 2
+scanningMode = 64
