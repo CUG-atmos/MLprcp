@@ -10,3 +10,6 @@
 data-raw/IPyNCL
 data-raw/EOF_results
 */*/temp/
+
+*.rda
+*.csv
