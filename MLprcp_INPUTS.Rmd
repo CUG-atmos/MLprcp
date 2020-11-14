@@ -1,0 +1,27 @@
+---
+output: github_document
+---
+
+
+```{r, include = TRUE}
+library(magrittr)
+load("./China_MLprcp_INPUTS_1deg_v010.rda")
+```
+
+# 输入数据
+
+## `X_climate`: 130个气候因子
+```{r, include = TRUE}
+str(X_climate) %>% print()
+```
+
+## `X_prcp`: 前两年降水输入，`dim = [n_year, n_variable, n_grid]`
+```{r, include = TRUE}
+str(X_prcp) %>% print()
+```
+
+## `Y_prcp`: 因变量，每年的夏季降水
+```{r, include = TRUE}
+str(Y_prcp) %>% print()
+print(d_loc)
+```
