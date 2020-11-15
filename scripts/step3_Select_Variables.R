@@ -19,10 +19,18 @@ colnames(X_climate) %>% str_extract("\\w{1,3}(?=-)") %>% table()
 
 ## version 01
 years <- 1961:2018
-var_timescale = "accuMean_pre|month_pre|season_pre"
-varnames <- selector(X_climate, c(var_timescale, "X|Y|Z"))
-X_climate0 <- X_climate[, varnames]
 
+d_expert <- read_xlsx("data-raw/expert_variable_selection.xlsx")
+d_expert %<>% mutate(
+    type2 = mapvalues(types, c("M_Atm_Nc", "M_Ext", "M_Oce_Er"), c("X", "Y", "Z")),
+    varname = paste0(type2, id))
+
+# 干掉专家认为不好的变量
+vars_bad <- d_expert[code == 0, varname] %>% paste(collapse = "-|") %>% grep(colnames(X_climate))
+
+var_timescale = "accuMean_pre|month_pre|season_pre"
+varnames <- X_climate[, -vars_bad] %>% selector(c(var_timescale, "X|Y|Z"))
+X_climate0 <- X_climate[, varnames]
 
 # 2. randomForest -------------------------------------------------------------
 {
@@ -32,7 +40,7 @@ X_climate0 <- X_climate[, varnames]
 
         XX = cbind(X_climate0, XX_prcp[,,i] %>% set_colnames(prcp_variableName))
         YY = YY_prcp[,i, drop = FALSE]
-        r = randomForest_kcv(XX, YY, kfold = 6, seed = 1, ind_all = 3:58, ntree = 500)
+        r = randomForest_kcv(XX, YY, kfold = 6, seed = 1, ind_all = 3:58, ntree = 200)
     }
 
     df = tidy_output(lst)
@@ -43,8 +51,8 @@ X_climate0 <- X_climate[, varnames]
         # BlAqGrYeOrRe
         # amwg256
         n = length(brks)
-        cols = get_color("BlGrYeOrReVi200", n)[-n] %>% rev()
-        cols = get_color("YlOrRd", n - 2) %>% c("blue", .)
+        cols = get_color("BlGrYeOrReVi200", n)[-n] #%>% rev()
+        # cols = get_color("YlOrRd", n - 2) %>% c("blue", .)
         p <- spplot(df, "R", at = brks,
                     col.regions = cols,
                     sp.layout = poly,
@@ -52,7 +60,8 @@ X_climate0 <- X_climate[, varnames]
                     ylim = c(18, 54), xlim = c(72.8, 135.4),
                     main = expression(bold(atop("Pearson Correlation (PRCP_obs, PRCP_cv)",
                                                 "during 1963-2018"))))
-        outfile = glue("cluster_mean_result_v011_({var_timescale}).pdf") %>% gsub("\\|", ",", .)
+        str_time = format(Sys.time(), "%Y%m%d-%H%M%S")
+        outfile = glue("cluster_mean_result_v012_({var_timescale})-{str_time}.pdf") %>% gsub("\\|", ",", .)
         write_fig(p, outfile, 9, 6)
     }
 }
