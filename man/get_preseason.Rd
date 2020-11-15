@@ -4,8 +4,13 @@
 \alias{get_preseason}
 \title{get preseason input}
 \usage{
-get_preseason(x, d_time, prefix = "X1")
+get_preseason(x, d_time, prefix = "X1", end_month = 2)
+}
+\arguments{
+\item{end_month}{2 or 8
+\code{2}: for temperature index
+\code{8}: for atmospheric circulation index}
 }
 \description{
-24 months pre FEB
+Prepare the previous 24 months INPUT
 }

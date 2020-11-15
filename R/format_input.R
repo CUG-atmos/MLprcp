@@ -37,9 +37,13 @@ vec_shiftleft_apply <- function(x, length, .fun = mean) {
 
 #' get preseason input
 #'
-#' 24 months pre FEB
+#' Prepare the previous 24 months INPUT
+#' @param end_month 2 or 8
+#' `2`: for temperature index
+#' `8`: for atmospheric circulation index
+#' 
 #' @import data.table
-get_preseason <- function(x, d_time, prefix = "X1") {
+get_preseason <- function(x, d_time, prefix = "X1", end_month = 2) {
     d = cbind(d_time, x)
     n = nrow(d)
 
@@ -56,9 +60,14 @@ get_preseason <- function(x, d_time, prefix = "X1") {
 
     years = 1961:max(d_time$year2)
     res = foreach(year = years) %do% {
+        
         # 夏季降水最多采用到2月，也即上一年冬季降水
-        I_month_target = which(make_date(year, 2, 1) == d$date)
-        I_yseason_target = which(x_season$yseason == paste0(year-1, "-winter")) # summer
+        I_month_target = which(make_date(year, end_month, 1) == d$date)
+        end_season = switch(as.character(end_month), 
+            `2` = paste0(year - 1, "-winter"), 
+            `8` = paste0(year, "-summer"))
+        I_yseason_target = which(x_season$yseason == end_season) # summer
+
         c(mat_month[I_month_target, ], mat_accuMean[I_month_target, ], mat_season[I_yseason_target, ])
     } %>% set_names(years) %>% do.call(rbind, .)
     names = colnames(res) %>% paste0(prefix, "-", .)

@@ -39,6 +39,9 @@ suppressMessages({
     library(caret)
 })
 
+shp <- rgdal::readOGR("E:/WSL/r_library/ChinaHW/extdata/shp/bou1_4l_south_sml.shp")
+poly <- list("sp.polygons", shp)
+
 
 # b <- brick("data-raw/CN05.1/CN05.1_1deg_Pre_1961_2018_month.nc")
 dates <- seq(ymd("1961-01-01"), ymd("2018-12-01"), by = "month")

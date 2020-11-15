@@ -61,6 +61,7 @@ set.seed(0)
 r = cmeans(X, 9, 100)
 d = cbind(d_loc, cluster = r$cluster %>% factor())
 fwrite(d, "INPUTS/fcm_prcp_clsuter_Id.csv")
+
 p <- ggplot(d, aes(lon, lat, color = cluster, shape = cluster)) +
     geom_point() +
     scale_shape_manual(values = 1:9)
