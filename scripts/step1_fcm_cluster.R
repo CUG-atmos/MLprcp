@@ -1,4 +1,4 @@
-source("scripts/main_pkgs.R", encoding = "utf-8")
+source("scripts/main_pkgs.R")
 
 ## 1. prepare INPUTS -----------------------------------------------------------
 b <- brick("data-raw/CN05.1/CN05.1_1deg_Pre_1961_2018_month.nc")
@@ -53,18 +53,18 @@ p <- ggplot(df, aes(c, value)) + geom_point() + geom_line() +
     theme_grey(base_size = 14) +
     theme(strip.text = element_text(size = 16)) +
     labs(y = "validation index")
-write_fig(p, "Figure1_FCM_validation_index.pdf", 10, 6)
+write_fig(p, "Figures/Figure1_FCM_validation_index.pdf", 10, 6)
 # fhv, pc, pe有没有得出有价值的信息。
 # pd, xb, fs, pd: 同时指示c = 9分区效果最好，si显示c=8是最好的选择，当c=9时si值略微下降，因此最终取c=9。
 
 set.seed(0)
 r = cmeans(X, 9, 100)
 d = cbind(d_loc, cluster = r$cluster %>% factor())
-
+fwrite(d, "INPUTS/fcm_prcp_clsuter_Id.csv")
 p <- ggplot(d, aes(lon, lat, color = cluster, shape = cluster)) +
     geom_point() +
     scale_shape_manual(values = 1:9)
-write_fig(p, "Figure2_FCM_spatialResult.pdf", 10, 6)
+write_fig(p, "Figures/Figure2_FCM_spatialResult.pdf", 10, 6)
 
 ## Performance Index -----------------------------------------------------------
 # gath.geva              : fuzzy (fhv), average (apd), partition (pd)

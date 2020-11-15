@@ -31,7 +31,12 @@ suppressMessages({
     # personal packages
     library(Ipaper)
     library(latticeGrob)
+    library(phenofit) 
     # library(rcolors)
+
+    # machine learning packages
+    library(randomForest)
+    library(caret)
 })
 
 

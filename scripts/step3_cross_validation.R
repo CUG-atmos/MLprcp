@@ -1,19 +1,18 @@
 source('scripts/main_pkgs.R', encoding = "utf-8")
-library(randomForest)
-library(phenofit)
-library(caret)
 
-
-set.seed(100)
-years <- 1961:2018
-nyear <- length(years)
-kfold <- 6
-inds = 3:nyear # begin from 1963
-ind_lst <- createFolds(inds, k = kfold, list = TRUE)
-
-ind  = ind_lst[[1]]
-ind_train = inds[-ind]
-ind_test  = setdiff(inds, ind_train)
+{
+    # k-fold cross validation index
+    set.seed(100)
+    years <- 1961:2018
+    nyear <- length(years)
+    kfold <- 6
+    inds = 3:nyear # begin from 1963
+    ind_lst <- createFolds(inds, k = kfold, list = TRUE)
+    
+    ind = ind_lst[[1]]
+    ind_train = inds[-ind]
+    ind_test = setdiff(inds, ind_train)
+}
 
 # 逐格点运算
 {
