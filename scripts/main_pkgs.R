@@ -28,11 +28,11 @@ suppressMessages({
     library(tidyverse)
     library(zoo)
     library(glue)
-    
+
     # personal packages
     library(Ipaper)
     library(latticeGrob)
-    library(phenofit) 
+    library(phenofit)
     library(rcolors)
 
     # machine learning packages
@@ -42,7 +42,7 @@ suppressMessages({
     library(plsdepot)
 })
 
-shp <- rgdal::readOGR("E:/WSL/r_library/ChinaHW/extdata/shp/bou1_4l_south_sml.shp")
+shp <- rgdal::readOGR(path.mnt("E:/WSL/r_library/ChinaHW/extdata/shp/bou1_4l_south_sml.shp"))
 poly <- list("sp.polygons", shp)
 
 

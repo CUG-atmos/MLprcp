@@ -35,17 +35,25 @@ X_climate0 <- X_climate[, varnames]
 
 # 2. randomForest -------------------------------------------------------------
 {
-    cluster_ids = seq(1, 9, 1) %>% set_names(., .)
-    lst <- foreach(i = cluster_ids, k = icount()) %do% {
-        runningId(i)
-
-        XX = cbind(X_climate0, XX_prcp[,,i] %>% set_colnames(prcp_variableName))
-        YY = YY_prcp[,i, drop = FALSE]
-
+    # cluster_ids = seq(1, 9, 1) %>% set_names(., .)
+    grids = 1:nrow(Y_prcp) %>% set_names(., .)
+    InitCluster(10)
+    lst <- foreach(i = grids, k = icount()) %dopar% {
+        runningId(i, 10)
+        XX = cbind(X_climate0, X_prcp[,,i] %>% set_colnames(prcp_variableName))
+        YY = Y_prcp[i, ] %>% as.matrix()
+        # d = data.frame(Y = YY[, 1])
+        # d$X = XX
+        # m = plsr(Y ~ X, data = d, ncomp = 10, validation = "CV")
+        # plsr2(XX, YY)
+        # r = plsr(XX, YY, 2)
         # m = plsreg1(XX, YY, comps = 2, crosval = TRUE)
-        r1 = PLSR_kcv(XX, YY, ind_all = 3:58)
+        r1 = PLSR_kcv(XX, YY, ind_all = 3:58, ncomp = 10, validation = "CV")
+        # m = r1$model[[1]]$model
+        # plot(m, "validation")
         # r = randomForest_kcv(XX, YY, kfold = 6, seed = 1, ind_all = 3:58, ntree = 200)
     }
+    map_int(lst, ~ .x$model[[1]]$model$Xmeans %>% length())
 
     df = tidy_output(lst)
     {
@@ -57,7 +65,7 @@ X_climate0 <- X_climate[, varnames]
         n = length(brks)
         cols = get_color("BlGrYeOrReVi200", n)[-n] #%>% rev()
         # cols = get_color("YlOrRd", n - 2) %>% c("blue", .)
-        p <- spplot(df, "R2", at = brks,
+        p <- spplot(df, "R", at = brks,
                     col.regions = cols,
                     sp.layout = poly,
                     aspect = 0.7,

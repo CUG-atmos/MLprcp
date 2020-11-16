@@ -10,8 +10,8 @@
 ## Tasklists
 
 - [x] Fuzzy C-means分区
-- [ ] PLSR挑选变量: the last step
-- [x] RandomForest、神经网络建模
+- [x] PLSR挑选变量: the last step
+- [x] RandomForest、PLSR
 - [x] k-fold cross validation评估
 
 ## Installation
