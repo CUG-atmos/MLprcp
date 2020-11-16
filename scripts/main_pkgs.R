@@ -27,16 +27,19 @@ suppressMessages({
     library(matrixStats)
     library(tidyverse)
     library(zoo)
+    library(glue)
     
     # personal packages
     library(Ipaper)
     library(latticeGrob)
     library(phenofit) 
-    # library(rcolors)
+    library(rcolors)
 
     # machine learning packages
     library(randomForest)
     library(caret)
+    library(pls)
+    library(plsdepot)
 })
 
 shp <- rgdal::readOGR("E:/WSL/r_library/ChinaHW/extdata/shp/bou1_4l_south_sml.shp")

@@ -3,6 +3,7 @@
 export(REOF)
 export(read_data)
 import(data.table)
+import(pls)
 importFrom(stats,is.mts)
 importFrom(stats,prcomp)
 importFrom(stats,time)

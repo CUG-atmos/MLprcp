@@ -29,6 +29,7 @@ d_expert %<>% mutate(
 vars_bad <- d_expert[code == 0, varname] %>% paste(collapse = "-|") %>% grep(colnames(X_climate))
 
 var_timescale = "accuMean_pre|month_pre|season_pre"
+var_timescale = "month_pre"
 varnames <- X_climate[, -vars_bad] %>% selector(c(var_timescale, "X|Y|Z"))
 X_climate0 <- X_climate[, varnames]
 
@@ -40,7 +41,10 @@ X_climate0 <- X_climate[, varnames]
 
         XX = cbind(X_climate0, XX_prcp[,,i] %>% set_colnames(prcp_variableName))
         YY = YY_prcp[,i, drop = FALSE]
-        r = randomForest_kcv(XX, YY, kfold = 6, seed = 1, ind_all = 3:58, ntree = 200)
+
+        # m = plsreg1(XX, YY, comps = 2, crosval = TRUE)
+        r1 = PLSR_kcv(XX, YY, ind_all = 3:58)
+        # r = randomForest_kcv(XX, YY, kfold = 6, seed = 1, ind_all = 3:58, ntree = 200)
     }
 
     df = tidy_output(lst)
@@ -53,15 +57,15 @@ X_climate0 <- X_climate[, varnames]
         n = length(brks)
         cols = get_color("BlGrYeOrReVi200", n)[-n] #%>% rev()
         # cols = get_color("YlOrRd", n - 2) %>% c("blue", .)
-        p <- spplot(df, "R", at = brks,
+        p <- spplot(df, "R2", at = brks,
                     col.regions = cols,
                     sp.layout = poly,
                     aspect = 0.7,
                     ylim = c(18, 54), xlim = c(72.8, 135.4),
-                    main = expression(bold(atop("Pearson Correlation (PRCP_obs, PRCP_cv)",
+                    main = expression(bold(atop("PLSR: Pearson Correlation (PRCP_obs, PRCP_cv)",
                                                 "during 1963-2018"))))
         str_time = format(Sys.time(), "%Y%m%d-%H%M%S")
-        outfile = glue("cluster_mean_result_v012_({var_timescale})-{str_time}.pdf") %>% gsub("\\|", ",", .)
+        outfile = glue("cluster_mean_result_v012_({var_timescale})-{str_time}_plsr.pdf") %>% gsub("\\|", ",", .)
         write_fig(p, outfile, 9, 6)
     }
 }
